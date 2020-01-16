@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container my-container">
+  <div class="row align-items-start justify-content-start my-row">
+
+    <!-- First column -->
+    <div class="col-md-6 col-sm-6 col-xs-12 my-col">
+      <h4 class="form-heading">Generate Reports</h4> <!-- Heading -->
+      {{ report.csrf_token }}
+      <form method="POST" action="{{url_for('generate_reports')}}"> <!-- Reports -->
+        {{ report.hidden_tag() }}
+
+        <fieldset class="form-group">
+
+          <div class="form-group">
+            {{ report.organization.label(class="form-control-label") }}
+            {{ report.organization(class="form-control form-control-md")}}
+          </div>
+
+          <div class="form-group">
+            {{ report.month.label(class="form-control-label") }}
+            {{ report.month(class="form-control form-control-md")}}
+          </div>
+
+          <div class="form-group">
+            {{ report.year.label(class="form-control-label") }}
+            {{ report.year(class="form-control form-control-md")}}
+          </div>
+
+          <div class="form-group">
+            {{ report.submit_report(class="btn btn-outline-info") }}
+          </div>
+        </fieldset>
+      </form>
+    </div> <!-- End of column -->
+
+    <div class="col-md-6 col-sm-6 col-xs-12 my-col">
+      <h4 class="form-heading">Download Report</h4> <!-- Heading -->
+      {{ download.csrf_token }}
+      <form method="POST" action="{{url_for('generate_downloads')}}"> <!-- Downloads -->
+        {{ download.hidden_tag() }}
+
+        <fieldset class="form-group">
+
+          <div class="form-group">
+            {{ download.organization.label(class="form-control-label") }}
+            {{ download.organization(class="form-control form-control-md")}}
+          </div>
+
+          <div class="form-group">
+            {{ download.month.label(class="form-control-label") }}
+            {{ download.month(class="form-control form-control-md")}}
+          </div>
+
+          <div class="form-group">
+            {{ download.year.label(class="form-control-label") }}
+            {{ download.year(class="form-control form-control-md")}}
+          </div>
+
+          <div class="form-group">
+            {{ download.submit_download(class="btn btn-outline-info") }}
+          </div>
+        </fieldset>
+      </form>
+    </div> <!-- End of column-->
+
+  </div> <!-- End of row -->
+
+  <div class="row align-items-start justify-content-start my-row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-col">
+
+      <!-- First table -->
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th>Month</th>
+            <th>Year</th>
+            <th>Total Clients Served</th>
+            <th>Unique Clients Served</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            {% if month %}
+              <td>{{ month }}</td>
+            {% else %}
+              <td>January</td>
+            {% endif %}
+
+            {% if year %}
+              <td>{{ year }}</td>
+            {% else %}
+              <td>N/A</td>
+            {% endif %}
+
+            {% if query %}
+              <td>{{ query|length }}</td> <!-- Grabs length of query -->
+            {% else %}
+              <td>0</td>
+            {% endif %}
+
+            {% if unique %}
+              <td>{{ unique|length }}</td>
+            {% else %}
+              <td>0</td>
+            {% endif %}
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Second table -->
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th>Client ID</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% if query %}
+            {% for q in query %}
+              <tr>
+                <td>{{ q.user_id }}</td> <!-- Client ID -->
+                <td>{{ q.timestamp.strftime('%m-%d-%Y') }}</td> <!-- DateTime -->
+              </tr>
+            {% endfor %}
+
+          {% else %}
+            <tr>
+              <td>0</td>
+              <td>N/A</td>
+            </tr>
+          {% endif %}
+        </tbody>
+
+        <tbody>
+          {% if results %}
+            {% for result in results %}
+              <tr>
+                <td>{{ result }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+
+
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

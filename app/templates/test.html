@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th>Client ID</th>
+      <th>Family Size</th>
+      <th>Family Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <h1>{{ client_id }}</h1>
+    {% for datapoints in u %}
+    <tr>
+      <td>{{ datapoints.id }}</td>
+      <td>{{ datapoints.family_size }}</td>
+      <td>{{ datapoints.family_name }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th>Client ID</th>
+      <th>Served by</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <h1>{{ client_id }}</h1>
+    {% for datapoints in u2 %}
+    <tr>
+      <td>{{ datapoints.user_id }}</td>
+      <td>{{ datapoints.organization }}</td>
+      <td>{{ datapoints.timestamp.strftime('%m-%d-%Y') }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

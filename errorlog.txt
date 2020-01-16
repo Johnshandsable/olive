@@ -1,0 +1,277 @@
+{'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x049751D0>, 'timestamp': datetime.datetime(2020, 1, 8, 19, 55, 3, 309814), 'user_id': None, 'id': 1, 'organization': 'Global FC'}
+{'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x04975810>, 'timestamp': datetime.datetime(2020, 1, 12, 18, 52, 21, 514941), 'user_id': 1, 'id': 2, 'organization': 'Global FC'}
+{'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x05156C90>, 'timestamp': datetime.datetime(2020, 1, 8, 19, 55, 3, 309814), 'user_id': None, 'id': 1, 'organization': 'Global FC'}
+{'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x05156550>, 'timestamp': datetime.datetime(2020, 1, 12, 18, 52, 21, 514941), 'user_id': 1, 'id': 2, 'organization': 'Global FC'}
+[]
+{'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x04E52650>, 'timestamp': datetime.datetime(2020, 1, 8, 19, 55, 3, 309814), 'user_id': None, 'id': 1, 'organization': 'Global FC'}
+{'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x04E52730>, 'timestamp': datetime.datetime(2020, 1, 12, 18, 52, 21, 514941), 'user_id': 1, 'id': 2, 'organization': 'Global FC'}
+{'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x04E52770>, 'timestamp': datetime.datetime(2020, 1, 12, 19, 24, 27, 336427), 'user_id': 2, 'id': 3, 'organization': 'Global FC'}
+<Response 314 bytes [200 OK]>
+<Response 314 bytes [200 OK]>
+[]
+[]
+[]
+[]
+[]
+[]
+<bound method FlaskForm.validate_on_submit of <app.forms.Download object at 0x04B48DF0>>
+[]
+False
+[]
+False
+[]
+False
+[]
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+False
+False
+False
+False
+False
+False
+False
+DOWNLOAD
+False
+True
+False
+DOWNLOAD
+False
+False
+False
+DOWNLOAD
+False
+True
+False
+DOWNLOAD
+False
+False
+False
+DOWNLOAD
+False
+False
+False
+DOWNLOAD
+False
+True
+False
+REPORT
+False
+True
+REPORT
+False
+True
+REPORT
+False
+True
+REPORT
+False
+True
+EXISTING
+True
+REPORT
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+DOWNLOAD
+False
+True
+REPORT
+False
+True
+REPORT
+REPORT
+False
+True
+REPORT
+0
+2019
+Global FC
+False
+True
+REPORT
+0
+2019
+Global FC
+False
+True
+<bound method Form.validate of <app.forms.Report object at 0x0000017F398A3108>>
+DOWNLOAD
+False
+True
+REPORT
+0
+2019
+Global FC
+False
+True
+<bound method Form.validate of <app.forms.Report object at 0x0000017F3BBBA048>>
+REPORT
+REPORT
+0
+2019
+Global FC
+False
+True
+{'month_r': ['Not a valid choice'], 'year_r': ['Not a valid choice']}
+REPORT
+None
+None
+None
+False
+True
+{'month': ['Not a valid choice'], 'year': ['Not a valid choice'], 'organization': ['Not a valid choice']}
+DOWNLOAD
+False
+True
+REPORT
+REPORT
+12
+2019
+Global FC
+False
+True
+{'month': ['Not a valid choice'], 'year': ['Not a valid choice']}
+REPORT
+0
+2019
+Global FC
+False
+True
+{'month': ['Not a valid choice'], 'year': ['Not a valid choice']}
+DOWNLOAD
+0
+2019
+Global FC
+False
+True
+{'month': ['Not a valid choice'], 'year': ['Not a valid choice']}
+REPORT
+0
+2019
+Global FC
+False
+True
+{'month': ['Not a valid choice'], 'year': ['Not a valid choice']}
+DOWNLOAD
+0
+2019
+Global FC
+False
+True
+{'month': ['Not a valid choice'], 'year': ['Not a valid choice']}
+REPORT
+12
+2019
+Global FC
+False
+True
+{'year': ['Not a valid choice']}
+REPORT
+REPORT
+12
+2019
+Happy Bottoms
+True
+True
+{}
+12
+2019
+Happy Bottoms
+REPORT
+12
+2019
+Happy Bottoms
+True
+True
+{}
+12
+2019
+Happy Bottoms
+REPORT
+12
+2019
+Happy Bottoms
+True
+True
+{}
+12
+2019
+Happy Bottoms
+DOWNLOAD
+11
+2019
+Global FC
+True
+True
+{}
+11
+2019
+Global FC
+DOWNLOAD
+12
+2019
+Global FC
+True
+True
+{}
+12
+2019
+Global FC

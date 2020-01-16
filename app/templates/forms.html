@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container my-container">
+  <div class="row align-items-start justify-content-around my-row">
+
+    <!-- First column -->
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 my-col">
+      <h4 class="form-heading">New Client</h4>
+
+      <form method="POST" action="{{ url_for('new') }}">
+        {{ new_form.hidden_tag() }}
+        <fieldset class="form-group">
+
+          <!-- Family name form-->
+          <div class="form-group">
+            {{ new_form.family_name.label(class="form-control-label") }}
+            {{ new_form.family_name(class="form-control form-control-md")}}
+          </div>
+
+          <!-- Family size form-->
+          <div class="form-group">
+            {{ new_form.family_size.label(class="form-control-label")}}
+            {{ new_form.family_size(class="form-control form-control-md")}}
+          </div>
+
+          <!-- Button -->
+          <div class="form-group">
+            {{ new_form.submit_new(class="btn btn-outline-info") }}
+          </div>
+
+        </fieldset>
+      </form>
+    </div>
+
+    <!-- Second column -->
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 my-col">
+      <h4 class="form-heading">Existing Client</h4>
+      <!-- Start of form -->
+      <form method="POST" action="{{ url_for('existing') }}">
+        {{ existing_form.hidden_tag() }}
+        <fieldset class="form-group">
+
+            <!-- client_id placeholder/input -->
+            <div class="form-group">
+              {{ existing_form.client_id.label(class="form-control-label") }}
+              {{ existing_form.client_id(class="form-control form-control-md")}}
+            </div>
+
+            <!-- Dropdown menu -->
+            <div class="form-group">
+              {{ existing_form.organization.label(class="form-control-label") }}
+              {{ existing_form.organization(class="form-control form-control-md") }}
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+              {{ existing_form.submit_existing(class="btn btn-outline-info") }}
+            </div>
+
+        </fieldset>
+      </form>
+    </div>
+
+    <!-- Final Column -->
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-col">
+      <h3 class="form-heading">Client History</h3>
+      {% if organization %}
+        <h5 style="text-align: left;">{{ organization }}</h5>
+      {% else %}
+        <h5 style="text-align: left;">Organization</h5>
+      {% endif %}
+
+      <!-- Table -->
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th>Client ID </th>
+            <th>Checked In</th>
+            <th>Last Served</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            {% if client_id %}
+              <td>{{ client_id }}</td>
+            {% else %}
+              <td>0</td>
+            {% endif %} <!-- Client ID -->
+
+            {% if timestamp %}
+              <td>{{ timestamp.strftime('%m-%d-%Y') }}</td>
+            {% else %}
+              <td>12-01-1921</td>
+            {% endif %} <!-- Timestamp -->
+
+            {% if checkin %}
+              <td>{{ checkin.timestamp.strftime('%m-%d-%Y') }}</td>
+            {% else %}
+              <td>N/A</td> <!-- default timestamp -->
+            {% endif %}
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div> <!-- End of row -->
+</div> <!-- End of container -->
+
+{% endblock content %}
