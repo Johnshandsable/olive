@@ -1,6 +1,28 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import IntegerField, SelectField, StringField, SubmitField, PasswordField, BooleanField
+from wtforms.validators import DataRequired, EqualTo, ValidationError, Length
+from app.models import UserLogin
+
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username',
+                           validators=[DataRequired(), Length(min=2, max=20)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[DataRequired(), EqualTo('password')])
+    submit_registration = SubmitField('Submit')
+
+    def validate_username(self, username):
+        user = UserLogin.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one.')
+
+
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    remember = BooleanField("Remember Me")
+    submit_login = SubmitField("Login")
 
 
 class NewForm(FlaskForm):
@@ -37,13 +59,13 @@ class Report(FlaskForm):
                                  ('12', 'December')])
 
     year = SelectField('Year', [DataRequired()],
-                       choices=[('2019', '2019'),
-                                ('2020', '2020'),
+                       choices=[('2020', '2020'),
                                 ('2021', '2021'),
                                 ('2022', '2022'),
                                 ('2023', '2023'),
                                 ('2024', '2024'),
-                                ('2025', '2025')])
+                                ('2025', '2025'),
+                                ('2026', '2026')])
 
     organization = SelectField('Organization', [DataRequired()],
                                choices=[('Global FC', 'Global FC'),
@@ -73,13 +95,13 @@ class Download(FlaskForm):
                                  ('12', 'December')])
 
     year = SelectField('Year', [DataRequired()],
-                       choices=[('2019', '2019'),
-                                ('2020', '2020'),
+                       choices=[('2020', '2020'),
                                 ('2021', '2021'),
                                 ('2022', '2022'),
                                 ('2023', '2023'),
                                 ('2024', '2024'),
-                                ('2025', '2025')])
+                                ('2025', '2025'),
+                                ('2026', '2026')])
 
     organization = SelectField('Organization', [DataRequired()],
                                choices=[('Global FC', 'Global FC'),

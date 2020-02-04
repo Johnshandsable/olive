@@ -4,19 +4,35 @@ import csv
 import datetime
 import os
 
-# 
+# needs install
 from sqlalchemy import and_
 from app.models import User, CheckIn
 
 
 # Grabbing file path for writing to csv
 # WORKS
+def get_directory():
+    dirname = os.path.abspath('.')
+    filename = os.path.join(dirname, 'app', 'downloads')
+    return filename
+
 def get_csvfile():
     dirname = os.path.abspath('.')
     # dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, 'app', 'downloads', 'report.csv')
     return filename
 
+def count_csvfile():
+    with open(get_csvfile(), 'r') as file:
+        fileReader = csv.reader(file)
+        row_count = sum(1 for row in fileReader)  # fileObject is your csv.reader
+        if row_count >= 1:
+            truncate_csvfile()
+
+def truncate_csvfile():
+    file = open(get_csvfile(), "w")
+    file.truncate()
+    file.close()
 
 # Grabbing file path for sqllite database
 # WORKS
@@ -25,21 +41,21 @@ def get_db():
     filename = os.path.join(dirname, 'app', 'site.db')
     return filename
 
-
-# Writes to csv file
-# NEEDS TESTING
-def write_csv(data):
-    with open(get_csvfile(), 'a') as file:
-        writer = csv.writer(file, delimiter='/n')
-        for line in data:
-            writer.writerow(line)
-    return None
-
+# Writes query from routes to a .csv file for downloading
+# WORKS
+def write_query(month, year, organization):
+    outfile = open(get_csvfile(), 'a')
+    fieldnames = ['client_id', 'organization', 'datetime']
+    outcsv = csv.writer(outfile)
+    outcsv.writerow(fieldnames)
+    records = get_query(month=month, year=year, organization=organization)  # list
+    [outcsv.writerow([getattr(curr, column.name) for column in CheckIn.__mapper__.columns]) for curr in records]
+    outfile.close()
 
 # Grabbing Datetime Objects
 def get_month(month):
     """
-    returns month string for displaying on route @reports
+    returns month string for displaying in html
     return: String
     """
     if month == 'All':
@@ -56,7 +72,7 @@ def get_month(month):
 def get_query(month, year, organization, token=False):
     """
     if no organization is passed in, 'Master' is assumed. If month is passed in as
-    'All', the return should return the checkins for the entire year.
+    'All', returns the checkins for the entire year.
 
     If token is passed in the function returns a query object rather than a list. token is assumed false otherwise.
     """
@@ -109,7 +125,7 @@ def get_query(month, year, organization, token=False):
                 and_(CheckIn.timestamp >= start_date, CheckIn.timestamp <= end_date))
 
 
-# NEEDS TESTING
+# WORKS
 def get_unique(month, year, organization):
     """
     returns number of unique users using id on the User db model
@@ -117,7 +133,6 @@ def get_unique(month, year, organization):
     """
     query = get_query(month=month, year=year, organization=organization, token=True)
     return query.order_by(CheckIn.user_id.desc()).all()
-    # return CheckIn.query.filter_by(organization=organization).order_by(user_id.desc()).all()
 
 
 # WORKS

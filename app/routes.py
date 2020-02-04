@@ -1,15 +1,16 @@
-import json
-from flask import render_template, url_for, flash, redirect, request, session, send_file, jsonify
-from app import app, db
-from app.forms import NewForm, ExistingForm, Report, Download
-from app.funcs import get_month, get_unique, get_query, get_last, write_csv
-from app.models import User, CheckIn, UserSchema, CheckInSchema
+from flask import render_template, url_for, flash, redirect, request, session, send_from_directory
+from flask_login import login_user, current_user, login_required
+from app import app, db, bcrypt
+from app.forms import NewForm, ExistingForm, Report, Download, LoginForm, RegistrationForm
+from app.queries import get_month, get_unique, get_query, get_last, write_query, get_csvfile, truncate_csvfile, count_csvfile, get_directory
+from app.models import User, UserLogin, CheckIn, UserSchema, CheckInSchema
 
 
 # ROUTES
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 @app.route("/forms", methods=['GET', 'POST'])
+@login_required
 def index():
     new_form = NewForm()
     existing_form = ExistingForm()
@@ -20,6 +21,34 @@ def index():
     else:
         return render_template("forms.html", new_form=new_form, existing_form=existing_form)
 
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = UserLogin(username=form.username.data, password=hashed_password)
+        user.add_login(user)
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    login = LoginForm()
+    if login.validate_on_submit():
+        user_login = UserLogin.query.filter_by(username=login.username.data).first()
+        if user_login and bcrypt.check_password_hash(user_login.password, login.password.data):
+            login_user(user_login, remember=login.remember.data)
+            return redirect(url_for('index'))
+        else:
+            flash('Login unsuccessful', 'danger')
+    return render_template("login.html", login=login)
 
 @app.route("/new", methods=['POST'])
 def new():
@@ -44,7 +73,6 @@ def existing():
         user = CheckIn(user_id=existing_form.client_id.data,
                        organization=existing_form.organization.data)
         if user.validate_existing(user):
-            # SESSION DATA
             session["client_id"] = user.user_id
             session["organization"] = user.organization
             user.checkin(user)
@@ -57,76 +85,79 @@ def existing():
 
 
 @app.route("/reports", methods=['GET', 'POST'])
+@login_required
 def index_reports():
     report = Report()
     download = Download()
     return render_template("reports.html", report=report, download=download)
 
-
+##### REPORT #####
 @app.route("/get-reports", methods=['POST'])
 def generate_reports():
     report = Report()
     download = Download()
-    ##### REPORT #####
     if report.validate_on_submit() and request.method == 'POST':
         if report.month.data == '0':
             report.month.data = 'All'
-        query_report = get_query(month=report.month.data, year=report.year.data, organization=report.organization.data)
+        query_report = get_query(
+            month=report.month.data, year=report.year.data, organization=report.organization.data)
         if query_report is not None:
             return render_template("reports.html", report=report, download=download, query=query_report,
                                    month=get_month(report.month.data), unique=get_unique(month=report.month.data,
-                                   year=report.year.data, organization=report.organization.data),
+                                                                                         year=report.year.data, organization=report.organization.data),
                                    year=report.year.data)
         else:
             return redirect(url_for("index_reports"))
     else:
         return redirect(url_for("index_reports"))
 
-
+##### DOWNLOAD #####
 @app.route("/get-downloads", methods=['POST'])
 def generate_downloads():
     download = Download()
-    ##### DOWNLOAD #####
     if download.validate_on_submit() and request.method == 'POST':
         if download.month.data == '0':
             download.month.data = 'All'
-        query_report = get_query(month=download.month.data, year=download.year.data, organization=download.organization.data)
+        query_report = get_query(
+            month=download.month.data, year=download.year.data, organization=download.organization.data)
         if query_report is not None:
-            user_schema = CheckInSchema(many=True)
-            output = user_schema.dump(query_report)
-            json_output = jsonify(output)
-            return render_template("file_downloads.html", response=output)
+            session['month'] = download.month.data
+            session['year'] = download.year.data
+            session['organization'] = download.organization.data
+            return redirect(url_for('return_file'))
         else:
             return redirect(url_for("index_reports"))
     else:
         return redirect(url_for("index_reports"))
 
+##### DOWNLOAD - FILE RETURN #####
+@app.route("/return-file")
+@login_required
+def return_file():
+    if 'month'and 'year' and 'organization' in session:
+        count_csvfile()
+        write_query(month=session['month'], year=session['year'],
+                    organization=session['organization'])
+        try:
+            return send_from_directory(get_directory(), filename="report.csv", as_attachment=True)
+        except FileNotFoundError:
+            abort(404)
+    else:
+        return redirect(url_for('index_reports'))
 
-# TESTING
+# BETA TESTING NEW FEATURES
 @app.route("/test", methods=['GET', 'POST'])
+@login_required
 def test():
     u = User.query.all()
     u2 = CheckIn.query.all()
     return render_template("test.html", u=u, u2=u2)
 
-
-@app.route("/return-file")
-def return_file():
-    users = CheckIn.query.all()
-
-    # for user in users:
-    # app.logger.error(user.__dict__)
-
-    user_schema = CheckInSchema(many=True)
-    output = user_schema.dump(users)  # output is list
-    json_output = jsonify(output)
-    """
-    with open('personal.json', 'w') as json_file:
-        for user in users:
-            json.dump(user.__dict__, json_file)
-    """
-    return render_template("file_downloads.html", response=output)
-    # return jsonify(output)
+@app.route("/search", methods=['GET', 'POST'])
+@login_required
+def search():
+    users = User.query.all()
+    return render_template("test.html", datapoints=users)
 
 
 # ERROR HANDLING

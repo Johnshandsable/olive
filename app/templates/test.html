@@ -2,12 +2,13 @@
 
 {% block content %}
 
-<table class="table">
+<table class="table" style="margin-top: 120px;">
   <thead class="thead-light">
     <tr>
       <th>Client ID</th>
       <th>Family Size</th>
       <th>Family Name</th>
+      <th>Date Created</th>
     </tr>
   </thead>
 
@@ -18,12 +19,13 @@
       <td>{{ datapoints.id }}</td>
       <td>{{ datapoints.family_size }}</td>
       <td>{{ datapoints.family_name }}</td>
+      <td>{{ datapoints.date_created }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
-<table class="table">
+<table class="table" style="margin-top: 40px;">
   <thead class="thead-light">
     <tr>
       <th>Client ID</th>

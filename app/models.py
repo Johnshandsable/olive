@@ -1,14 +1,39 @@
 from datetime import datetime
-from app import db, ma
-from flask_marshmallow import Marshmallow
+from app import db, ma, login_manager
+from flask_login import UserMixin
+from marshmallow import Schema, fields
+
+
+def dump_datetime(value):
+    """Deserialize datetime object into string form for JSON processing."""
+    if value is None:
+        return None
+    return [value.strftime("%Y-%m-%d"), value.strftime("%H:%M:%S")]
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return UserLogin.query.get(int(user_id))
+
+
+class UserLogin(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
+
+    @staticmethod
+    def add_login(user):
+        db.session.add(user)
+        db.session.commit()
 
 
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     family_size = db.Column(db.Integer, nullable=False)
     family_name = db.Column(db.String, nullable=False)
-    check_in = db.relationship('CheckIn', backref='user.id', lazy='dynamic')
+    check_in = db.relationship('CheckIn', backref='client', lazy='dynamic')
 
     def __repr__(self):
         return f"Client ID: {self.id}"
@@ -31,9 +56,9 @@ class User(db.Model):
 class CheckIn(db.Model):
     __tablename__ = "checkins"
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     organization = db.Column(db.String, default="")
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
         return f"{self.user_id}, {self.organization}, {self.timestamp}"
@@ -51,12 +76,31 @@ class CheckIn(db.Model):
         else:
             return False  # returns False if user does not already exist
 
+    @property
+    def serialize(self):
+       """Return object data in easily serializable format"""
+       return {
+           'user_id': self.user_id,
+           'checked_in': dump_datetime(self.timestamp),
+           'organization': self.organization}
+           # 'many2many'  : self.serialize_many2many
 
-class UserSchema(ma.ModelSchema):
-    class Meta():
-        fields = ('id', 'family_size', 'family_name')
+    @property
+    def serialize_many2many(self):
+       """
+       Return object's relations in easily serializable format.
+       NB! Calls many2many's serialize property.
+       """
+       return [ item.serialize for item in self.many2many]
+
+class UserSchema(Schema):
+    id = fields.Int()
+    date_created = fields.DateTime()
+    family_size = fields.Str()
+    family_name = fields.Str()
 
 
-class CheckInSchema(ma.ModelSchema):
-    class Meta():
-        fields = ('organization', 'timestamp', 'user_id')
+class CheckInSchema(Schema):
+    user_id = fields.Int()
+    organization = fields.Str()
+    timestamp = fields.DateTime()

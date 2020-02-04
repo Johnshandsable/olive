@@ -4,10 +4,11 @@
   <div class="row align-items-start justify-content-start my-row">
 
     <!-- First column -->
-    <div class="col-md-6 col-sm-6 col-xs-12 my-col">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 my-col">
       <h4 class="form-heading">Generate Reports</h4> <!-- Heading -->
       {{ report.csrf_token }}
-      <form method="POST" action="{{url_for('generate_reports')}}"> <!-- Reports -->
+      <form method="POST" action="{{url_for('generate_reports')}}">
+        <!-- Reports -->
         {{ report.hidden_tag() }}
 
         <fieldset class="form-group">
@@ -34,10 +35,11 @@
       </form>
     </div> <!-- End of column -->
 
-    <div class="col-md-6 col-sm-6 col-xs-12 my-col">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 my-col">
       <h4 class="form-heading">Download Report</h4> <!-- Heading -->
       {{ download.csrf_token }}
-      <form method="POST" action="{{url_for('generate_downloads')}}"> <!-- Downloads -->
+      <form method="POST" action="{{url_for('generate_downloads')}}">
+        <!-- Downloads -->
         {{ download.hidden_tag() }}
 
         <fieldset class="form-group">
@@ -67,7 +69,7 @@
   </div> <!-- End of row -->
 
   <div class="row align-items-start justify-content-start my-row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-col">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 my-col">
 
       <!-- First table -->
       <table class="table">
@@ -83,27 +85,27 @@
         <tbody>
           <tr>
             {% if month %}
-              <td>{{ month }}</td>
+            <td>{{ month }}</td>
             {% else %}
-              <td>January</td>
+            <td>January</td>
             {% endif %}
 
             {% if year %}
-              <td>{{ year }}</td>
+            <td>{{ year }}</td>
             {% else %}
-              <td>N/A</td>
+            <td>N/A</td>
             {% endif %}
 
             {% if query %}
-              <td>{{ query|length }}</td> <!-- Grabs length of query -->
+            <td>{{ query|length }}</td> <!-- Grabs length of query -->
             {% else %}
-              <td>0</td>
+            <td>0</td>
             {% endif %}
 
             {% if unique %}
-              <td>{{ unique|length }}</td>
+            <td>{{ unique|length }}</td>
             {% else %}
-              <td>0</td>
+            <td>0</td>
             {% endif %}
           </tr>
         </tbody>
@@ -114,34 +116,37 @@
         <thead class="thead-light">
           <tr>
             <th>Client ID</th>
-            <th>Timestamp</th>
+            <th>Date</th>
+            <th>Time</th>
           </tr>
         </thead>
 
         <tbody>
           {% if query %}
-            {% for q in query %}
-              <tr>
-                <td>{{ q.user_id }}</td> <!-- Client ID -->
-                <td>{{ q.timestamp.strftime('%m-%d-%Y') }}</td> <!-- DateTime -->
-              </tr>
-            {% endfor %}
+          {% for q in query %}
+          <tr>
+            <td>{{ q.user_id }}</td> <!-- Client ID -->
+            <td>{{ q.timestamp.strftime('%m-%d-%Y') }}</td> <!-- DateTime -->
+            <td>{{ q.timestamp.strftime('%I:%M %p') }}</td>
+          </tr>
+          {% endfor %}
 
           {% else %}
-            <tr>
-              <td>0</td>
-              <td>N/A</td>
-            </tr>
+          <tr>
+            <td>0</td>
+            <td>N/A</td>
+            <td>N/A</td>
+          </tr>
           {% endif %}
         </tbody>
 
         <tbody>
           {% if results %}
-            {% for result in results %}
-              <tr>
-                <td>{{ result }}</td>
-              </tr>
-            {% endfor %}
+          {% for result in results %}
+          <tr>
+            <td>{{ result }}</td>
+          </tr>
+          {% endfor %}
           {% endif %}
         </tbody>
       </table>
