@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, login_required
 from app import app, db, bcrypt
 from app.forms import NewForm, ExistingForm, Report, Download, LoginForm, RegistrationForm
 from app.queries import get_month, get_unique, get_query, get_last, write_query, get_csvfile, truncate_csvfile, count_csvfile, get_directory
-from app.models import User, UserLogin, CheckIn, UserSchema, CheckInSchema
+from app.models import User, UserLogin, CheckIn
 
 
 # ROUTES

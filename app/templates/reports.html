@@ -126,8 +126,8 @@
           {% for q in query %}
           <tr>
             <td>{{ q.user_id }}</td> <!-- Client ID -->
-            <td>{{ q.timestamp.strftime('%m-%d-%Y') }}</td> <!-- DateTime -->
-            <td>{{ q.timestamp.strftime('%I:%M %p') }}</td>
+            <td>{{ q.timestamp.strftime('%m-%d-%Y') }}</td> <!-- DateTime - month, day, year -->
+            <td>{{ q.timestamp.strftime('%I:%M %p') }}</td> <!-- DateTime - hour, minute, local am/pm-->
           </tr>
           {% endfor %}
 
