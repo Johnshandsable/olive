@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row align-items-start justify-content-around login-row">
+
+  <!-- First column -->
+  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 my-col">
+    <h4 class="form-heading">Login</h4>
+
+    <form method="POST" action="{{ url_for('users.login') }}">
+      {{ login.hidden_tag() }}
+      <fieldset class="form-group">
+
+        <!-- Username -->
+        <div class="form-group">
+          {{ login.username.label(class="form-control-label") }}
+
+          <!-- Username error -->
+          {% if login.username.errors %}
+            {{ login.username(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+              {% for error in login.username.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+              </div>
+          {% else %}
+            {{ login.username(class="form-control form-control-lg")}}
+          {% endif %}
+
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          {{ login.password.label(class="form-control-label")}}
+
+          <!-- Password Error  -->
+          {% if login.password.errors %}
+            {{ login.password(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in login.password.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ login.password(class="form-control form-control-lg")}}
+          {% endif %}
+        </div>
+
+        <div class="form-check">
+          {{ login.remember(class="form-check-input") }}
+          {{ login.remember.label(class="form-check-label") }}
+        </div>
+      </fieldset>
+
+          <!-- Button -->
+      <div class="form-group">
+        {{ login.submit_login(class="btn btn-outline-info") }}
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock content %}
