@@ -26,9 +26,13 @@ def create_app(config_class=Config):
     manager.add_command('db', MigrateCommand)
     migrate.init_app(app, db)
     from app.users.routes import users
+    from app.models import init_db
     from app.main.routes import main
     from app.posts.routes import posts
     from app.errors.handlers import errors
+
+    with app.app_context():
+        init_db()
 
     app.register_blueprint(users)
     app.register_blueprint(posts)
