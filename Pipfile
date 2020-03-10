@@ -14,6 +14,7 @@ flask-login = "*"
 gunicorn = "*"
 pymysql = "*"
 python-dotenv = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.7"

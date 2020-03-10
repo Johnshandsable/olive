@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, SubmitField, PasswordField, BooleanField
-from wtforms.validators import DataRequired, EqualTo, ValidationError, Length
+from wtforms.validators import DataRequired, EqualTo, ValidationError, Length, Email
 from wtforms.fields.html5 import EmailField
 from app.models import UserLogin
 
@@ -32,7 +32,7 @@ class UserSearch(FlaskForm):
     search_user = SubmitField("Search")
 
 class ExtendedUserSearch(FlaskForm):
-    email = EmailField('Email address', [validators.DataRequired(), validators.Email()])
+    email = EmailField('Email address', validators=[DataRequired(), Email()])
     first_name = StringField("First Name", validators=[DataRequired()])
     last_name = StringField("Last Name", validators=[DataRequired()])
     family_size = IntegerField("Family Size", validators=[DataRequired()])

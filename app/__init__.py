@@ -19,6 +19,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    migrate = Migrate(app, db)
     from app.users.routes import users
     from app.main.routes import main
     from app.posts.routes import posts
